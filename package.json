@@ -1,0 +1,17 @@
+{
+  "name": "i2b2-wc-overlay-webserver",
+  "description": "i2b2 Webclient overlay proxy/webserver",
+  "version": "1.0",
+  "license": "MIT",
+  "engines": {
+    "node": ">=4.0"
+  },
+  "bin": {
+    "server": "./server/main.js"
+  },
+  "main": "standalone.js",
+  "dependencies": {
+    "lodash": "^2.4.2",
+    "serve-static": "^1.12.3"
+  }
+}

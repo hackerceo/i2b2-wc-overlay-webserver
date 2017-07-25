@@ -1,0 +1,11 @@
+{
+  "hosting": {
+    "main": {
+      "port": 5001
+    },
+    "admin": {
+      "port": 5002
+    },
+    "environment": "HSD"
+  }
+}

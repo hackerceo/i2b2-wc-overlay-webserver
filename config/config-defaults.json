@@ -1,0 +1,95 @@
+{
+  "hosting": {
+    "main": {
+      "port": 8001
+    },
+    "admin": {
+      "port": 8002
+    }
+  },
+  "plugins": {
+    "manifests": [ "https://raw.githubusercontent.com/i2b2plugins/i2b2-catalogs/master/i2b2-wc.repo" ],
+    "loaded": {
+      "PLUGIN_1": {
+        "code": "HSDIntro",
+        "directory": "wc-HSDIntro"
+      }
+    }
+  },
+  "webclients": {
+    "WC-1.7": {
+      "name": "Official 1.7 Release",
+      "archive": "",
+      "directory": "v1.7"
+    }
+  },
+  "i2b2_domains": {
+    "DOMAIN_1": {
+      "domain": "i2b2demo",
+      "name": "HarvardDemo",
+      "urlCellPM": "http://services.i2b2.org/i2b2/services/PMService/",
+      "allowAnalysis": true,
+      "debug": true
+    },
+    "DOMAIN_2": {
+      "domain": "i2b2demo",
+      "name": "WeberLabDemo-HSD",
+      "urlCellPM": "http://staging.connects.catalyst.harvard.edu/i2b2demo/services/?/PMService/",
+      "allowAnalysis": true,
+      "debug": true
+    },
+    "DOMAIN_3": {
+      "domain": "i2b2demo",
+      "name": "WeberLab-HSD_Latest",
+      "urlCellPM": "http://weber.hms.harvard.edu/HealthcareSystemDynamics/i2b2dev/services/?/PMService/",
+      "allowAnalysis": true,
+      "debug": true
+    }
+  },
+  "overrides": {
+    "i2b2_config_data-V1": {
+      "module": {
+        "bind": "/i2b2_config_data.js",
+        "location": "wc.override.i2b2_config_data.js"
+      }
+    },
+    "i2b2_loader-V1": {
+      "module": {
+        "bind": "/js-i2b2/i2b2_loader.js",
+        "location": "wc.override.i2b2_loader.js"
+      }
+    },
+    "plugin-overlay-V1": {
+      "module": {
+        "bind": "/js-i2b2/cells/plugins/",
+        "location": "wc.override.cells.js"
+      }
+    }
+  },
+  "environments": {
+    "HSD": {
+      "description": "nick's development environment for HSD development",
+      "webclient": "WC-1.7",
+      "overrides": {
+        "i2b2_config_data-V1": {
+          "domains": ["DOMAIN_1","DOMAIN_2","DOMAIN_3"]
+        },
+        "i2b2_loader-V1": {
+          "load_base": true,
+          "load_plugins": {
+            "PLUGIN_1": {
+              "config": {
+                "forceLoading": true,
+                "forceConfigMsg": { "params": [] },
+                "roles": [ "DATA_LDS", "DATA_DEID", "DATA_PROT" ],
+                "forceDir": "cells/plugins/community"
+              }
+            },
+            "PLUGIN_2": {},
+            "PLUGIN_3": {}
+          }
+        }
+      }
+    }
+  }
+}
