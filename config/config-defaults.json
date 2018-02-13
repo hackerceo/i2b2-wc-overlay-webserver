@@ -1,7 +1,8 @@
 {
   "hosting": {
     "main": {
-      "port": 8001
+      "port": 8001,
+      "proxy": "/~proxy"
     },
     "admin": {
       "port": 8002
@@ -25,11 +26,13 @@
   },
   "i2b2_domains": {
     "DOMAIN_1": {
-      "domain": "i2b2demo",
-      "name": "HarvardDemo",
-      "urlCellPM": "http://services.i2b2.org/i2b2/services/PMService/",
       "allowAnalysis": true,
-      "debug": true
+      "debug": true,
+      "domain": "i2b2demo",
+      "installer": "/webclient/plugin_installer/",
+      "isSHRINE": false,
+      "name": "HarvardDemo",
+      "urlCellPM": "http://services.i2b2.org/i2b2/services/PMService/"
     },
     "DOMAIN_2": {
       "domain": "i2b2demo",
@@ -49,33 +52,56 @@
   "overrides": {
     "i2b2_config_data-V1": {
       "module": {
+        "bindX": "/^\\/i2b2_config_data\\.js/m",
         "bind": "/i2b2_config_data.js",
         "location": "wc.override.i2b2_config_data.js"
       }
     },
     "i2b2_loader-V1": {
       "module": {
+        "bindX": "/^\\/js-i2b2\\/i2b2_loader\\.js$/m",
         "bind": "/js-i2b2/i2b2_loader.js",
         "location": "wc.override.i2b2_loader.js"
       }
     },
+    "i2b2_cell_config_data-V1": {
+      "module": {
+        "bind": "/^\\/js-i2b2\\/.*\\/cell_config_data\\.js$/m",
+        "location": "wc.override.cell_config_data.js"
+      }
+    },
     "plugin-overlay-V1": {
       "module": {
-        "bind": "/js-i2b2/cells/plugins/",
+        "bind": "/^\\/js-i2b2\\/cells\\/plugins\\//m",
         "location": "wc.override.cells.js"
       }
     }
   },
   "environments": {
+    "HSD2": {
+      "overrides": {
+      }
+    },
     "HSD": {
       "description": "nick's development environment for HSD development",
       "webclient": "WC-1.7",
       "overrides": {
         "i2b2_config_data-V1": {
+          "replace_locations": {
+            "start": "lstDomains",
+            "end": "//-"
+          },
           "domains": ["DOMAIN_1","DOMAIN_2","DOMAIN_3"]
+        },
+        "i2b2_cell_config_data-V1": {
+          "stuff": "this is configuration data"
         },
         "i2b2_loader-V1": {
           "load_base": true,
+          "replace_locations": {
+            "start": "i2b2.hive.tempCellsList",
+            "end": ";"
+          },
           "load_plugins": {
             "PLUGIN_1": {
               "config": {

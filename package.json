@@ -12,6 +12,8 @@
   "main": "standalone.js",
   "dependencies": {
     "lodash": "^2.4.2",
+    "react": "^15.6.1",
+    "react-mdl": "^1.10.3",
     "serve-static": "^1.12.3"
   }
 }

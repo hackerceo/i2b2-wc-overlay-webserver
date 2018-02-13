@@ -2,3 +2,5 @@ node_modules/
 downloads/*
 hosting/plugins/*
 hosting/wc-core/*
+.idea/*
+npm-debug.log*
