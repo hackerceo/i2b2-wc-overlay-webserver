@@ -1,11 +1,13 @@
 'use strict'
 
+// TODO: Rework this!!!
+
 const _ = require('lodash'),
     fs = require('fs');
 
 
 // creates a new override module
-function Override_i2b2Loader(options) {
+function Override_i2b2LoaderCellsJSON(options) {
     const immut = options;
     this.options = immut;
     return (function (req, res) {
@@ -47,4 +49,4 @@ function Override_i2b2Loader(options) {
 }
 
 
-module.exports = Override_i2b2Loader;
+module.exports = Override_i2b2LoaderCellsJSON;

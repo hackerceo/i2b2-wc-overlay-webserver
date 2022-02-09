@@ -6,6 +6,6 @@
     "admin": {
       "port": 5002
     },
-    "environment": "HSD"
+    "environment": "Refresh"
   }
 }

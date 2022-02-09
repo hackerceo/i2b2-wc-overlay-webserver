@@ -81,14 +81,12 @@ ServerContoller.prototype.adminStart = function(options) {
     // stop old processing
     if (_.isPlainObject(this.service.admin)) {
         this.service.admin.stop();
-        this.service.admin.configure(options):
+        this.service.admin.configure(options);
     } else {
         // create hosting for admin interface process
         const OverlayEngine = require('./overlay-engine.js');
         this.service.hosting = new OverlayEngine(this.configuration);
     }
-
-
 
     // create proxy service process
     if (this.configuration.hosting.main.admin) {

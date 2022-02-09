@@ -6,12 +6,15 @@ const _ = require('lodash'),
     colors = require('colors/safe'),
     url = require('url'),
     http = require('http'),
+    https = require('https'),
     dom = require('xmldom').DOMParser,
-    xpath = require('xpath');
+    xpath = require('xpath'),
+    crypto = require('crypto');
 
 // creates a new OverlayEngine
 function ProxyEngine(options) {
     this.configuration = options;
+    console.dir(this.configuration);
     this.router = (function(req, res, next) {
         if (req._parsedUrl.pathname !== this.configuration.hosting.main.proxy) {
             next();
@@ -48,12 +51,16 @@ function ProxyEngine(options) {
                 var pos_start = doc_str.search(token);
                 token = "</message_body>";
                 var pos_end = doc_str.search(token);
-                var temp = doc_str.substr(pos_start, pos_end - pos_start - token.length);
+                var temp = doc_str.substr(pos_start, pos_end - pos_start + token.length);
                 hashstr.push(temp);
 
                 //  [YES] TODO: analyze the request portion of the i2b2 message and compute a hash value.
                 //          check our local database for a record that has a matching request cache value
                 //          if found then serve up the cached result (remember to replace the security token)
+                var hash = crypto.createHash('sha256');
+                // build hash of body
+                hash.update(temp);
+                hashstr.push(hash.digest('hex'));
 
 
                 // forward the request to the redirect URL
@@ -77,6 +84,7 @@ function ProxyEngine(options) {
                 delete headers['content-length'];
 
                 var opts = {
+                    protocol: proxy_to.protocol,
                     hostname: proxy_to.hostname,
                     port: proxy_to.port,
                     path: proxy_to.path,
@@ -85,12 +93,16 @@ function ProxyEngine(options) {
                 }
                 if (opts['port'] === null) delete opts['port'];
 
+                console.warn("making proxied request to...");
+                console.dir(opts);
+
                 var i2b2_result = [];
-                const proxy_request = http.request(opts, (proxy_res) => {
+                const proxy_reqest_hdlr  = function(proxy_res) {
                     res.statusCode = proxy_res.statusCode;
                     _.forEach(proxy_res.headers, (value, key) => {
                         res.setHeader(key, value);
                     });
+                    res.setHeader('i2b2-dev-svr-mode', 'Proxy');
                     res.removeHeader('set-cookie');
                     res.setHeader('Content-Type', 'text/xml');
                     proxy_res.on('data', (chunk) => {
@@ -99,7 +111,22 @@ function ProxyEngine(options) {
                     proxy_res.on('end', () => {
                         res.end(Buffer.concat(i2b2_result));
                     });
-                });
+                }
+
+                switch (proxy_to.protocol) {
+                    case "http:":
+                        var proxy_request = http.request(opts, proxy_reqest_hdlr);
+                        break;
+                    case "https:":
+                        // TODO: Do not allow this insanely insecure hack to accept self-signed SSL Certificates
+                        process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+                        var proxy_request = https.request(opts, proxy_reqest_hdlr);
+                        break;
+                    default:
+                        console.error("proxy engine does not support protocol = " + proxy_to.protocol);
+                        return false;
+                        break;
+                }
 
                 proxy_request.on('error', (e) => {
                     console.error(`problem with request: ${e.message}`);
@@ -107,6 +134,7 @@ function ProxyEngine(options) {
                 });
 
                 body = String(Buffer.concat(body));
+                res.setHeader('i2b2-dev-svr-mode', 'Proxy');
                 proxy_request.setHeader('Content-Type', 'text/xml');
                 proxy_request.setHeader('Content-Length', body.length);
                 proxy_request.end(body);
@@ -132,6 +160,12 @@ ProxyEngine.prototype.cacheEngine = function() {
     return this.cacheEngine;
 };
 
+
+
+
+// TODO: Build this module
+function ProxyCacheEngine(options) {}
+
 ProxyCacheEngine.prototype.CacheToDB = function() {
     return this.router;
 };
@@ -144,8 +178,10 @@ ProxyCacheEngine.prototype.cacheListMsgs = function(filter) {
 ProxyCacheEngine.prototype.cacheGetMsg = function(msg_id) {
     return this.router;
 };
+ProxyCacheEngine.prototype.cacheGetMsg = function() {
+    return this.router;
+};
 
-ProxyCacheEngine.prototype.cacheGetMsg
 
 
 module.exports = ProxyEngine;

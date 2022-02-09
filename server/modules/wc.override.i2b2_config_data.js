@@ -22,6 +22,7 @@ function Override_i2b2ConfigData(options) {
         // change the proxy URL for this instance
         i2b2_config.urlProxy = "~proxy";
 
+        res.setHeader('i2b2-dev-svr-mode', 'module:i2b2_config_data');
         res.setHeader('Content-Type', 'text/javascript');
         res.end(JSON.stringify(i2b2_config));
     }).bind(this);

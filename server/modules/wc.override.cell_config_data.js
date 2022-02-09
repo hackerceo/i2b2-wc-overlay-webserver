@@ -6,6 +6,7 @@ function Override_i2b2CellConfigData(options) {
     this.options = immut;
     return (function (req, res) {
         console.log("=== BINGO ===");
+        res.setHeader('i2b2-dev-svr-mode', 'module:cell_config_data');
         res.setHeader('Content-Type', 'text/plain; charset=utf-8');
         var lookupPath = req.originalUrl.replace('/cell_config_data.js', '');
 //        console.warn(lookupPath);

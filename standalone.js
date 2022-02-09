@@ -16,7 +16,7 @@ if (args.length < 1 || args.length > 3 || /^--?h(elp)?$/.test(args[0])) {
     return process.exit(1);
 }
 
-var configDefaults = JSON.parse(fs.readFileSync(path.join(__dirname, 'config/config-defaults.json'))),
+var configDefaults = JSON.parse(fs.readFileSync(path.join(__dirname, './config/config-defaults.json'))),
     config = _.defaultsDeep(JSON.parse(fs.readFileSync(args[0])), configDefaults);
 
 // ensure the major config elements are setup properly
@@ -89,7 +89,7 @@ var host_config = {
 var services = require('./server/main.js');
 // load the selected hosting configuration
 services.hostStart(host_config);
-services.adminStart(host_config);
+//services.adminStart(host_config);
 
 
 console.log(colors.yellow(`Started i2b2 Web Client ['${env_ident}'] on port ${config.hosting.main.port}`));

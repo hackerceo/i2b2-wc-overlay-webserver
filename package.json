@@ -1,19 +1,23 @@
 {
-  "name": "i2b2-wc-overlay-webserver",
-  "description": "i2b2 Webclient overlay proxy/webserver",
-  "version": "1.0",
+  "name": "i2b2-developer-proxyserver",
+  "description": "An i2b2 Webclient overlay proxy/webserver",
+  "author": "Nick Benik <nbenik@gmail.com>",
+  "version": "1.0.0",
   "license": "MIT",
   "engines": {
-    "node": ">=4.0"
+    "node": ">=10.0"
   },
   "bin": {
-    "server": "./server/main.js"
+    "server": "./server/src/main.js"
   },
   "main": "standalone.js",
   "dependencies": {
-    "lodash": "^2.4.2",
-    "react": "^15.6.1",
-    "react-mdl": "^1.10.3",
-    "serve-static": "^1.12.3"
+    "colors": "^1.3.2",
+    "finalhandler": "^1.0.3",
+    "lodash": ">=4.17.21",
+    "router": "^1.3.1",
+    "serve-static": "^1.12.3",
+    "xmldom": "^0.1.27",
+    "xpath": "^0.0.24"
   }
 }
