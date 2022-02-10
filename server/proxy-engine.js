@@ -7,7 +7,7 @@ const _ = require('lodash'),
     url = require('url'),
     http = require('http'),
     https = require('https'),
-    dom = require('xmldom').DOMParser,
+    dom = require('@xmldom/xmldom').DOMParser,
     xpath = require('xpath'),
     crypto = require('crypto');
 
